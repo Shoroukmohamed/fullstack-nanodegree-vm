@@ -214,8 +214,7 @@ def gconnect():
 
 
 def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
+    newUser = User(name=login_session['username'], email=login_session['email'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
@@ -286,8 +285,10 @@ def catagoriesJSON():
 def showCatagories():
     items = session.query(CatagoryItem).order_by(CatagoryItem.name.desc())
     catagories = session.query(Catagory).order_by(asc(Catagory.name))
-
-    return render_template('catagories.html', catagories=catagories,items=items)
+    if 'username' not in login_session:
+        return render_template('publiccatagories.html', catagories=catagories)
+    else:
+        return render_template('catagories.html', catagories=catagories,items=items)
 
 # Create a new restaurant
 
@@ -409,7 +410,7 @@ def deleteSeriesItem(catagory_id, series_id):
         return redirect('/login')
     catagory = session.query(Catagory).filter_by(id=catagory_id).one()
     itemToDelete = session.query(CatagoryItem).filter_by(id=series_id).one()
-    if login_session['user_id'] != restaurant.user_id:
+    if login_session['user_id'] != catagory.user_id:
         return "<script>function myFunction() {alert('You are not authorized to delete menu items to this catagory. Please create your own catagory in order to delete items.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         session.delete(itemToDelete)
