@@ -16,10 +16,10 @@
 		</div>
 	</div>
     <div class="menu-item">
-                    {{item.name}}
-                    {{item.description}}
-            <a href='{{url_for('editSeriesItem', catagory_id=catagory.id, series_id=item.id ) }}'>Edit</a> | 
-            <a href='{{url_for('deleteSeriesItem', catagory_id=catagory.id, series_id=item.id ) }}'>Delete</a>
+                   <h3> {{item.name}} </h3>
+				   <h3>{{item.description}} </h3>
+            <a href='{{url_for('editSeriesItem', catagory_id=item.catagory_id, series_id=item.id ) }}'>Edit</a> | 
+            <a href='{{url_for('deleteSeriesItem', catagory_id=item.catagory_id, series_id=item.id ) }}'>Delete</a>
         </div>
        
 {% endblock %}

@@ -286,6 +286,7 @@ def catagoriesJSON():
 def showCatagories():
     items = session.query(CatagoryItem).order_by(CatagoryItem.name.desc())
     catagories = session.query(Catagory).order_by(asc(Catagory.name))
+
     return render_template('catagories.html', catagories=catagories,items=items)
 
 # Create a new restaurant
@@ -354,7 +355,7 @@ def showMenu(catagory_id):
 
 @app.route('/catagory/<int:catagory_id>/items/<int:series_id>/description/')
 def showDIS(catagory_id,series_id):
-    item = session.query(CatagoryItem).filter_by(id=series_id).one()
+    item = session.query(CatagoryItem).filter_by(id=series_id).first()
     #items = session.query(CatagoryItem).filter_by(catagory_id=catagory_id).all()
     catagory = session.query(Catagory).filter_by(id=catagory_id).one()
     return render_template('dis.html', item=item)
