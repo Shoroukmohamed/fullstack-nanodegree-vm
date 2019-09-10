@@ -27,7 +27,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Create anti-forgery state token
-@app.route('/login')
+@app.route('/login/')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
@@ -286,7 +286,7 @@ def showCatagories():
     items = session.query(CatagoryItem).order_by(CatagoryItem.name.desc())
     catagories = session.query(Catagory).order_by(asc(Catagory.name))
     if 'username' not in login_session:
-        return render_template('publiccatagories.html', catagories=catagories)
+        return render_template('publiccatagories.html', catagories=catagories,items=items)
     else:
         return render_template('catagories.html', catagories=catagories,items=items)
 
@@ -296,7 +296,7 @@ def showCatagories():
 @app.route('/catagory/new/', methods=['GET', 'POST'])
 def newCatagory():
     if 'username' not in login_session:
-        return redirect('/login')
+        return redirect('/login/')
     if request.method == 'POST':
         newCatagory = Catagory(name=request.form['name'], user_id=login_session['user_id'])
         session.add(newCatagory)
@@ -313,7 +313,7 @@ def newCatagory():
 def editCatagory(catagory_id):
     editedCatagory = session.query(Catagory).filter_by(id=catagory_id).one()
     if 'username' not in login_session:
-        return redirect('/login')
+        return redirect('/login/')
     if editedCatagory.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit this catagory. Please create your own  in order to edit.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
@@ -330,7 +330,7 @@ def editCatagory(catagory_id):
 def deleteCatagory(catagory_id):
     catagoryToDelete = session.query(Catagory).filter_by(id=catagory_id).one()
     if 'username' not in login_session:
-        return redirect('/login')
+        return redirect('/login/')
     if catagoryToDelete.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to delete this catagory. Please create your own catagory in order to delete.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
@@ -365,17 +365,17 @@ def showDIS(catagory_id,series_id):
 @app.route('/catagory/<int:catagory_id>/items/new/', methods=['GET', 'POST'])
 def newSeriesItem(catagory_id):
     if 'username' not in login_session:
-        return redirect('/login')
+        return redirect('/login/')
     catagory = session.query(Catagory).filter_by(id=catagory_id).one()
-    if login_session['user_id'] != catagory.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to add menu items to this catagory. Please create your own series in order to add items.');}</script><body onload='myFunction()'>"
+ #   if login_session['user_id'] != catagory.user_id:
+ #       return "<script>function myFunction() {alert('You are not authorized to add menu items to this catagory. Please create your own series in order to add items.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         newItem = CatagoryItem(name=request.form['name'], description=request.form[
                            'description'], catagory_id=catagory_id)
         session.add(newItem)
         session.commit()
         flash('New Series %s Item Successfully Created' % (newItem.name))
-        return redirect(url_for('showMenu', catagory_id=catagory_id))
+        return redirect(url_for('showCatagory'))
     else:
         return render_template('newseriesitem.html', catagory_id=catagory_id,catagory=catagory)
 
@@ -385,16 +385,18 @@ def newSeriesItem(catagory_id):
 @app.route('/catagory/<int:catagory_id>/items/<int:series_id>/edit', methods=['GET', 'POST'])
 def editSeriesItem(catagory_id, series_id):
     if 'username' not in login_session:
-        return redirect('/login')
+        return redirect('/login/')
     editedItem = session.query(CatagoryItem).filter_by(id=series_id).one()
     catagory = session.query(Catagory).filter_by(id=catagory_id).one()
-    if login_session['user_id'] != catagory.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to edit menu items to this catagory. Please create your own series in order to edit items.');}</script><body onload='myFunction()'>"
+#    if login_session['user_id'] != catagory.user_id:
+#        return "<script>function myFunction() {alert('You are not authorized to edit menu items to this catagory. Please create your own series in order to edit items.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
         if request.form['description']:
             editedItem.description = request.form['description']
+        if request.form['catagory']:
+            editedItem.description = request.form['catagory']
         session.add(editedItem)
         session.commit()
         flash('Menu Series Successfully Edited')
@@ -407,11 +409,11 @@ def editSeriesItem(catagory_id, series_id):
 @app.route('/catagory/<int:catagory_id>/items/<int:series_id>/delete', methods=['GET', 'POST'])
 def deleteSeriesItem(catagory_id, series_id):
     if 'username' not in login_session:
-        return redirect('/login')
+        return redirect('/login/')
     catagory = session.query(Catagory).filter_by(id=catagory_id).one()
     itemToDelete = session.query(CatagoryItem).filter_by(id=series_id).one()
-    if login_session['user_id'] != catagory.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to delete menu items to this catagory. Please create your own catagory in order to delete items.');}</script><body onload='myFunction()'>"
+#    if login_session['user_id'] != catagory.user_id:
+#        return "<script>function myFunction() {alert('You are not authorized to delete menu items to this catagory. Please create your own catagory in order to delete items.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
