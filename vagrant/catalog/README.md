@@ -1,4 +1,4 @@
-item_catalog
+﻿item_catalog
 to run it
 1.write 'vagrant up'
 2.write 'vagrant ssh'

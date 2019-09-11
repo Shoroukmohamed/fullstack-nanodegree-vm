@@ -32,14 +32,14 @@ session.add(catagory1)
 session.commit()
 
 catagoryItem2 = CatagoryItem(user_id=1, name="i can hear your voice", description="hero can see what you think throgth your eyes",
-                      catagory=catagory1)
+                             catagory=catagory1)
 
 session.add(catagoryItem2)
 session.commit()
 
 
 catagoryItem1 = CatagoryItem(user_id=1, name="her private life", description="How fan can do for his gange",
-                      catagory=catagory1)
+                             catagory=catagory1)
 
 session.add(catagoryItem1)
 session.commit()
@@ -52,13 +52,13 @@ session.commit()
 
 
 catagoryItem1 = CatagoryItem(user_id=1, name="laugh for wikiki", description="it is about fun and hotel",
-                     catagory=catagory2)
+                             catagory=catagory2)
 
 session.add(catagoryItem1)
 session.commit()
 
 catagoryItem2 = CatagoryItem(user_id=1, name="king of shopping louis",
-                     description="it is about one has amnesia and try to live ", catagory=catagory2)
+                             description="it is about one has amnesia and try to live ", catagory=catagory2)
 
 session.add(catagoryItem2)
 session.commit()
@@ -71,10 +71,9 @@ session.commit()
 
 
 catagoryItem1 = CatagoryItem(user_id=1, name="school 2013", description="it is about what faces the students in their schools.",
-                      catagory=catagory1)
+                             catagory=catagory1)
 
 session.add(catagoryItem1)
 session.commit()
 
 print "added menu series!"
-
